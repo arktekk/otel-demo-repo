@@ -1,0 +1,32 @@
+[tools]
+java = "temurin-21.0.6+7.0.LTS"
+
+[tasks.download-javaagent]
+run = """
+if [ ! -f "opentelemetry-javaagent.jar" ]; then
+    wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v2.12.0/opentelemetry-javaagent.jar
+else
+    echo "javaagent already downloaded"
+fi
+"""
+
+[tasks.server-start-with-otel]
+depends = ["download-javaagent"]
+run = """
+java \
+    -javaagent:opentelemetry-javaagent.jar \
+    -Dotel.metric.export.interval=2000 \
+    -jar camelo.jar
+"""
+
+[tasks.server-start-with-otel-debug]
+depends = ["download-javaagent"]
+run = """
+java \
+    -Dotel.javaagent.debug=true \
+    -javaagent:opentelemetry-javaagent.jar \
+    -jar camelo.jar
+"""
+
+[tasks.server-start]
+run = "java -jar camelo.jar"

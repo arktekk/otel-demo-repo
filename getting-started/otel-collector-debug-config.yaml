@@ -18,7 +18,7 @@ service:
       exporters: [nop]
     metrics:
       receivers: [otlp]
-      exporters: [nop]
+      exporters: [debug]
     logs:
       receivers: [otlp]
-      exporters: [debug]
+      exporters: [nop]
